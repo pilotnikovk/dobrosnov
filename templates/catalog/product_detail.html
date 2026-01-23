@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Мебельный магазин "Уют"{% endblock %}
+
+{% block content %}
+<section class="product-detail">
+    <div class="container">
+        <div class="product-detail-container">
+            <!-- Хлебные крошки -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'catalog' %}">Каталог</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+                </ol>
+            </nav>
+            
+            <div class="product-main">
+                <!-- Галерея изображений -->
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" id="main-product-image">
+                    </div>
+                    {% if product.image2 or product.image3 %}
+                    <div class="thumbnail-container">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="thumbnail active">
+                        {% if product.image2 %}
+                        <img src="{{ product.image2.url }}" alt="{{ product.name }} вид 2" class="thumbnail">
+                        {% endif %}
+                        {% if product.image3 %}
+                        <img src="{{ product.image3.url }}" alt="{{ product.name }} вид 3" class="thumbnail">
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Информация о товаре -->
+                <div class="product-info">
+                    <h1>{{ product.name }}</h1>
+                    <div class="product-meta">
+                        <span class="product-category">{{ product.category.name }}</span>
+                        <span class="product-sku">Артикул: {{ product.sku }}</span>
+                    </div>
+                    
+                    <div class="product-price">
+                        <span class="current-price">От {{ product.price }} руб.</span>
+                        {% if product.old_price %}
+                        <span class="old-price">{{ product.old_price }} руб.</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-short-description">
+                        <p>{{ product.short_description }}</p>
+                    </div>
+                    
+                    <div class="product-features">
+                        <h3>Характеристики</h3>
+                        <ul>
+                            <li><strong>Материал:</strong> {{ product.material }}</li>
+                            <!-- <li><strong>Цвет:</strong> {{ product.color }}</li> -->
+                            <li><strong>Размеры:</strong> {{ product.dimensions }}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="share-buttons">
+                        <span>Поделиться:</span>
+                        <!-- <a href="#" class="share-btn facebook"><i class="fab fa-facebook-f"></i></a> -->
+                        <a href="#" class="share-btn instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="share-btn vk"><i class="fab fa-vk"></i></a>
+                        <a href="#" class="share-btn whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Табы с дополнительной информацией -->
+            <div class="product-tabs">
+                <ul class="tabs-nav">
+                    <li class="active" data-tab="description">Описание</li>
+                    <!-- <li data-tab="characteristics">Характеристики</li> -->
+                    <li data-tab="reviews">Отзывы ({{ product.reviews.count }})</li>
+                </ul>
+                
+                <div class="tabs-content">
+                    <div class="tab-pane active" id="description">
+                        <h3>Подробное описание</h3>
+                        <div class="tab-content-inner">
+                            {{ product.full_description|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="tab-pane" id="characteristics">
+                        <h3>Технические характеристики</h3>
+                        <div class="tab-content-inner">
+                            <table class="specs-table">
+                                <tr>
+                                    <th>Материал</th>
+                                    <td>{{ product.material }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Цвет</th>
+                                    <td>{{ product.color }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Размеры (Ш x Г x В)</th>
+                                    <td>{{ product.dimensions }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Вес</th>
+                                    <td>{{ product.weight }} кг</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> -->
+                    
+                    <div class="tab-pane" id="reviews">
+                        <h3>Отзывы о товаре</h3>
+                        <div class="tab-content-inner">
+                            {% if product.reviews.all %}
+                            <div class="reviews-list">
+                                {% for review in product.reviews.all %}
+                                <div class="review">
+                                    <div class="review-header">
+                                        <span class="review-author">{{ review.author }}</span>
+                                        <span class="review-date">{{ review.created_at|date:"d.m.Y" }}</span>
+                                        <div class="review-rating">
+                                            {% for i in "12345" %}
+                                            <i class="fas fa-star{% if forloop.counter > review.rating %}-o{% endif %}"></i>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="review-body">
+                                        <p>{{ review.text }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p>Пока нет отзывов о этом товаре. Будьте первым!</p>
+                            {% endif %}
+                            
+                            <button class="btn btn-outline-primary add-review-btn">Добавить отзыв</button>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane" id="delivery">
+                        <h3>Доставка и оплата</h3>
+                        <div class="tab-content-inner">
+                            <h4>Способы доставки:</h4>
+                            <ul>
+                                <li><strong>Самовывоз:</strong> со склада по адресу г. Москва, ул. Мебельная, 123</li>
+                                <li><strong>Доставка по Москве:</strong> 500 руб. (бесплатно при заказе от 20 000 руб.)</li>
+                                <li><strong>Доставка по России:</strong> рассчитывается индивидуально</li>
+                            </ul>
+                            
+                            <h4>Способы оплаты:</h4>
+                            <ul>
+                                <li>Наличными при получении</li>
+                                <li>Банковской картой онлайн</li>
+                                <li>Безналичный расчет для юридических лиц</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Похожие товары -->
+            <div class="related-products">
+                <h2>Похожие товары</h2>
+                <div class="products-grid">
+                    {% for product in related_products %}
+                    <div class="product-card">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        <h3>{{ product.name }}</h3>
+                        <p class="price">{{ product.price }} руб.</p>
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/product_detail.js' %}"></script>
+{% endblock %}

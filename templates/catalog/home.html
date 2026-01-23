@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/carousel.css' %}">
+{% endblock %}
+
+{% block hero %}
+<section class="hero">
+    <div class="hero-carousel">
+        <div class="carousel-slide active">
+            <img src="{% static 'images/hero1.png' %}" alt="Мебель для гостиной">
+            <div class="carousel-caption">
+                <h2>Мебель для гостиной</h2>
+                <p>Создайте уют в вашем доме</p>
+                <a href="{% url 'catalog' %}" class="btn btn-primary">В каталог</a>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            <img src="{% static 'images/hero2.png' %}" alt="Спальни">
+            <div class="carousel-caption">
+                <h2>Спальни мечты</h2>
+                <p>Комфорт и стиль для вашего отдыха</p>
+                <a href="{% url 'catalog' %}" class="btn btn-primary">В каталог</a>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            <img src="{% static 'images/hero3.png' %}" alt="Кухни">
+            <div class="carousel-caption">
+                <h2>Детские кроватки на заказ</h2>
+                <p>Индивидуальные решения для вашего дома</p>
+                <a href="{% url 'catalog' %}" class="btn btn-primary">В каталог</a>
+            </div>
+        </div>
+        <button class="carousel-control prev">&#10094;</button>
+        <button class="carousel-control next">&#10095;</button>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="popular-products">
+    <h2>Популярные товары</h2>
+    <div class="products-grid">
+        {% for product in popular_products %}
+        <div class="product-card">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <p class="price">От {{ product.price }} руб.</p>
+            <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">Подробнее</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="advantages">
+    <h2>Почему выбирают нас</h2>
+    <div class="advantages-grid">
+        <div class="advantage">
+            <i class="fas fa-truck"></i>
+            <h3>Быстрая доставка</h3>
+            <p>Доставим ваш заказ в течение 3-5 дней</p>
+        </div>
+        <div class="advantage">
+            <i class="fas fa-medal"></i>
+            <h3>Гарантия качества</h3>
+            <p>Используем только проверенные материалы</p>
+        </div>
+        <div class="advantage">
+            <i class="fas fa-couch"></i>
+            <h3>Индивидуальный подход</h3>
+            <p>Мебель по вашим размерам и дизайну</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/carousel.js' %}"></script>
+{% endblock %}
