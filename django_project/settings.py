@@ -13,24 +13,27 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import dj_database_url
 
 load_dotenv()
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR / 'subdir'
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['95.163.242.153', '2a00:f940:2:4:2::4d66', '95-163-242-153.cloudvps.regruhosting.ru', 'доброснов.рф', '*']
+# Разрешенные хосты (можно переопределить через переменную окружения ALLOWED_HOSTS)
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    '95.163.242.153,2a00:f940:2:4:2::4d66,95-163-242-153.cloudvps.regruhosting.ru,dobrosnov.shop,localhost,127.0.0.1'
+).split(',')
 
 # Application definition
 
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Добавлено для раздачи статики
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -55,8 +59,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django_project.urls'
-
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES = [
     {
@@ -79,8 +81,6 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-import dj_database_url
 
 DATABASES = {
     'default': {
@@ -131,8 +131,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# WhiteNoise configuration for static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-print(f"BASE_DIR: {BASE_DIR}")
-print(f"MEDIA_ROOT: {MEDIA_ROOT}")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
