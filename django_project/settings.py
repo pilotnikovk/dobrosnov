@@ -120,9 +120,17 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# SECURE_SSL_REDIRECT = False
+# Security settings for production
+# Раскомментируйте для production с HTTPS
+# SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
 # CSRF_COOKIE_SECURE = True
+
+# CSRF trusted origins для работы форм на HTTPS
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    'CSRF_TRUSTED_ORIGINS',
+    'https://dobrosnov.shop,https://95-163-242-153.cloudvps.regruhosting.ru'
+).split(',')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

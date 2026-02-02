@@ -18,8 +18,11 @@
 ```bash
 SECRET_KEY=ваш-секретный-ключ-сгенерируйте-новый
 DEBUG=False
-ALLOWED_HOSTS=your-app.railway.app
+ALLOWED_HOSTS=your-app.railway.app,dobrosnov.shop
+CSRF_TRUSTED_ORIGINS=https://your-app.railway.app,https://dobrosnov.shop
 ```
+
+**Важно:** `CSRF_TRUSTED_ORIGINS` должен включать протокол `https://`!
 
 ### Генерация SECRET_KEY
 
@@ -59,9 +62,11 @@ DATABASE_URL=postgresql://user:password@host:port/dbname
 
 ## Важно!
 
-- После первого деплоя добавьте домен Railway в `ALLOWED_HOSTS` в переменных окружения
-- Пример: `ALLOWED_HOSTS=your-app.railway.app,dobrosnov.shop`
+- После первого деплоя добавьте домен Railway в `ALLOWED_HOSTS` и `CSRF_TRUSTED_ORIGINS`
+- Пример `ALLOWED_HOSTS`: `your-app.railway.app,dobrosnov.shop`
+- Пример `CSRF_TRUSTED_ORIGINS`: `https://your-app.railway.app,https://dobrosnov.shop`
 - Для production обязательно `DEBUG=False`
+- **CSRF_TRUSTED_ORIGINS требует протокол https:// в начале каждого домена!**
 
 ## Локальная разработка
 
